@@ -83,7 +83,7 @@ A modular, real-time 3D Physics Engine written in **C++** using **OpenGL**, buil
 
 ## 📷 Screenshots and videos
 
-![Collision with multiple objects in the Scene](https://github.com/user-attachments/assets/53d4ab9b-5e7f-48ec-9362-96c1e14ca395)
+![A Video of Collision with multiple objects in the Scene (3 Dimensional)](https://github.com/user-attachments/assets/53d4ab9b-5e7f-48ec-9362-96c1e14ca395)
 
 ![Sample Script Run](https://github.com/user-attachments/assets/66341ab4-bd8c-4835-8ae3-a39355c39014)
 
