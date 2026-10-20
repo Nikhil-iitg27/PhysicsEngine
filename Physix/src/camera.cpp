@@ -1,3 +1,5 @@
+// See camera.h for what Camera is and how its free-fly movement/look model
+// works; this file is the implementation.
 #include "camera.h"
 #define GLM_ENABLE_EXPERIMENTAL
 #include <glm/gtx/rotate_vector.hpp>
@@ -5,6 +7,7 @@
 
 #include <glm/gtx/vector_angle.hpp>
 #include <glm/gtx/norm.hpp> // for length2
+#include <GLFW/glfw3.h> // for GLFW_KEY_* constants used below
 
 Camera::Camera(const glm::vec3& cameraPos, const glm::vec3& cameraDir, const int mode) {
     this->Mode = mode;
@@ -36,41 +39,59 @@ Camera::Camera(const glm::vec3& cameraPos, const glm::vec3& cameraDir, const int
 }
 
 
-void Camera::detectKeyPress(GLFWwindow* window, float deltaTime) {
+void Camera::Update(Input& input, float deltaTime) {
     glm::vec3 up(0.0f, 1.0f, 0.0f);
     glm::vec3 right = glm::normalize(glm::cross(this->Direction, up));
 
     float moveStep = this->Speed * deltaTime;
     float rotateStep = glm::radians(this->AngularSpeed * deltaTime);
 
+    // Mouse look (only while the cursor is captured -- see Input::SetCursorCaptured)
+    if (input.IsCursorCaptured()) {
+        const float mouseSensitivity = 0.15f; // degrees per pixel of mouse movement
+        glm::vec2 mouseDelta = input.GetMouseDelta();
+
+        if (mouseDelta.x != 0.0f) {
+            float yaw = glm::radians(-mouseDelta.x * mouseSensitivity);
+            this->Direction = glm::normalize(glm::rotate(this->Direction, yaw, up));
+            right = glm::normalize(glm::cross(this->Direction, up));
+        }
+        if (mouseDelta.y != 0.0f) {
+            float desiredPitch = glm::clamp(this->Pitch - mouseDelta.y * mouseSensitivity, -80.0f, 80.0f);
+            float pitchStep = glm::radians(desiredPitch - this->Pitch);
+            this->Direction = glm::normalize(glm::rotate(this->Direction, pitchStep, right));
+            this->Pitch = desiredPitch;
+        }
+    }
+
     // Movement
-    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    if (input.IsKeyPressed(GLFW_KEY_W))
         this->Position += this->Direction * moveStep;
-    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    if (input.IsKeyPressed(GLFW_KEY_S))
         this->Position -= this->Direction * moveStep;
-    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    if (input.IsKeyPressed(GLFW_KEY_A))
         this->Position -= right * moveStep;
-    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    if (input.IsKeyPressed(GLFW_KEY_D))
         this->Position += right * moveStep;
-    if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS)
+    if (input.IsKeyPressed(GLFW_KEY_LEFT_CONTROL))
         this->Position.y += moveStep;
-    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+    if (input.IsKeyPressed(GLFW_KEY_LEFT_SHIFT))
         this->Position.y -= moveStep;
 
     // Rotation - Yaw (left/right)
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS)
+    if (input.IsKeyPressed(GLFW_KEY_LEFT))
         this->Direction = glm::normalize(glm::rotate(this->Direction, rotateStep, up));
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS)
+    if (input.IsKeyPressed(GLFW_KEY_RIGHT))
         this->Direction = glm::normalize(glm::rotate(this->Direction, -rotateStep, up));
 
-    // Rotation - Pitch (up/down), clamped to ±80 degrees
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS && this->Pitch < 80.0f) {
+    // Rotation - Pitch (up/down), clamped to +-80 degrees
+    if (input.IsKeyPressed(GLFW_KEY_UP) && this->Pitch < 80.0f) {
         this->Direction = glm::normalize(glm::rotate(this->Direction, rotateStep, right));
         this->Pitch += glm::degrees(rotateStep);
         if (this->Pitch > 80.0f) this->Pitch = 80.0f;
     }
 
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS && this->Pitch > -80.0f) {
+    if (input.IsKeyPressed(GLFW_KEY_DOWN) && this->Pitch > -80.0f) {
         this->Direction = glm::normalize(glm::rotate(this->Direction, -rotateStep, right));
         this->Pitch -= glm::degrees(rotateStep);
         if (this->Pitch < -80.0f) this->Pitch = -80.0f;
@@ -90,4 +111,20 @@ glm::mat4 Camera::getViewMatrix() const {
 
 glm::mat4 Camera::getProjectionMatrix(float aspectRatio) const {
     return glm::perspective(glm::radians(this->ProjectionAngle), aspectRatio, this->MinDist, this->MaxDist);
+}
+
+Ray Camera::ScreenPointToRay(glm::vec2 screenPos, glm::vec2 screenSize) const {
+    float ndcX = (2.0f * screenPos.x) / screenSize.x - 1.0f;
+    float ndcY = 1.0f - (2.0f * screenPos.y) / screenSize.y; // screen y-down -> NDC y-up
+
+    glm::vec3 worldUp(0.0f, 1.0f, 0.0f);
+    glm::vec3 right = glm::normalize(glm::cross(this->Direction, worldUp));
+    glm::vec3 camUp = glm::normalize(glm::cross(right, this->Direction));
+
+    float aspect = screenSize.x / screenSize.y;
+    float halfHeight = tanf(glm::radians(this->ProjectionAngle) * 0.5f);
+    float halfWidth = halfHeight * aspect;
+
+    glm::vec3 dir = glm::normalize(this->Direction + right * (ndcX * halfWidth) + camUp * (ndcY * halfHeight));
+    return Ray{ this->Position, dir };
 }

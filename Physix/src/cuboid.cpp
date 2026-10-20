@@ -1,3 +1,6 @@
+// See cuboid.h for what Cuboid is and its role in sphere-vs-wall collision
+// (cached face planes for a signed-distance-to-plane test); this file is the
+// implementation.
 #include "Cuboid.h"
 
 Cuboid::Cuboid(Cuboid_mesh* mesh,
@@ -15,6 +18,10 @@ void Cuboid::Render(const Shader& shader) {
 
 glm::mat4 Cuboid::getModelMatrix() const {
     return modelMatrix;
+}
+
+const glm::mat4& Cuboid::getInverseModelMatrix() const {
+    return invModelMatrix;
 }
 
 float Cuboid::getLength() const {
@@ -46,9 +53,16 @@ void Cuboid::updateModelMatrix() {
     modelMatrix = glm::rotate(modelMatrix, rotation.x, glm::vec3(1.0f, 0.0f, 0.0f));
     modelMatrix = glm::rotate(modelMatrix, rotation.y, glm::vec3(0.0f, 1.0f, 0.0f));
     modelMatrix = glm::rotate(modelMatrix, rotation.z, glm::vec3(0.0f, 0.0f, 1.0f));
+
+    invModelMatrix = glm::inverse(modelMatrix);
+    cachedFaces = computeSurfacePlanes();
 }
 
-std::vector<Face> Cuboid::getSurfacePlanes() const {
+const std::vector<Face>& Cuboid::getSurfacePlanes() const {
+    return cachedFaces;
+}
+
+std::vector<Face> Cuboid::computeSurfacePlanes() const {
     std::vector<Face> faces;
 
     // Retrieve half-dimensions from the mesh.

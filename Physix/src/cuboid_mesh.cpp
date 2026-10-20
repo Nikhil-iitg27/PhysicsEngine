@@ -1,3 +1,6 @@
+// See cuboid_mesh.h for what this class is (pure GPU box geometry, 6
+// per-face-normal quads); this file is the implementation, including the
+// vertex/index generation in generateCuboidMesh below.
 #include "cuboid_mesh.h"
 #include <vector>
 

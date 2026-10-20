@@ -1,7 +1,42 @@
+// See shader.h for what Shader is (a GLSL compile/link wrapper); this file
+// is the implementation, including FromFiles' executable-relative file
+// loading (see LoadTextFile/GetExecutableDirectory below).
 #include "Shader.h"
 #include <iostream>
 #include <sstream>
 #include <fstream>
+// Shader.h includes glad/glad.h, which defines APIENTRY unconditionally;
+// <Windows.h> defines it again, so undef first to avoid a redefinition
+// warning (both definitions are __stdcall -- this doesn't change anything).
+#ifdef APIENTRY
+#undef APIENTRY
+#endif
+#include <Windows.h>
+
+namespace {
+    // Directory the running .exe lives in, with a trailing slash -- used so
+    // shader file paths are resolved relative to the executable, not to
+    // whatever the current working directory happens to be at launch.
+    std::string GetExecutableDirectory() {
+        char path[MAX_PATH];
+        DWORD length = GetModuleFileNameA(nullptr, path, MAX_PATH);
+        std::string fullPath(path, length);
+        size_t lastSlash = fullPath.find_last_of("\\/");
+        return (lastSlash == std::string::npos) ? "" : fullPath.substr(0, lastSlash + 1);
+    }
+
+    std::string LoadTextFile(const std::string& relativePath) {
+        std::string fullPath = GetExecutableDirectory() + relativePath;
+        std::ifstream file(fullPath);
+        if (!file.is_open()) {
+            std::cerr << "Failed to open shader file: " << fullPath << std::endl;
+            return "";
+        }
+        std::stringstream buffer;
+        buffer << file.rdbuf();
+        return buffer.str();
+    }
+}
 
 // Helper function to compile a shader
 static unsigned int compileShader(unsigned int type, const char* source) {
@@ -43,6 +78,12 @@ Shader::Shader(const char* vertexSource, const char* fragmentSource) {
     // Clean up shaders (they are linked into the program now)
     glDeleteShader(vertex);
     glDeleteShader(fragment);
+}
+
+Shader Shader::FromFiles(const std::string& vertexPath, const std::string& fragmentPath) {
+    std::string vertexSource = LoadTextFile(vertexPath);
+    std::string fragmentSource = LoadTextFile(fragmentPath);
+    return Shader(vertexSource.c_str(), fragmentSource.c_str());
 }
 
 void Shader::use() const {

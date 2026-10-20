@@ -1,45 +1,24 @@
 #pragma once
-#include <vector>
-#include <glad/glad.h>
 #include <glm/glm.hpp>
+#include "physics/RigidBody.h"
+#include "render/RenderComponent.h"
 #include "sphere_mesh.h"
 #include "shader.h"
-#include "cuboid.h"
 
+// A dynamic spherical entity in the scene: pairs a physics RigidBody with a
+// RenderComponent. PhysicsWorld only ever touches `body`; the renderer only
+// ever touches `render` (+ body.position). Sphere itself carries no
+// simulation or rendering logic of its own -- it exists so call sites that
+// want "one sphere" (spawning, depth-sorting for blending) can keep working
+// with a single object -- this doesn't need a full
+// ECS to achieve the physics/rendering separation.
 class Sphere {
 public:
-	// declare physical properties
-	float mass;
-	bool fixed = false;
-	glm::vec3 position;
-	glm::vec3 velocity;
-	glm::vec3 acceleration;
+    RigidBody body;
+    RenderComponent render;
 
-	glm::vec3 color;
-	float transparency;
-	Sphere_mesh* mesh;
-	
-	Sphere(float mass, Sphere_mesh* mesh, glm::vec3 position);
-	Sphere(float mass, Sphere_mesh* mesh, glm::vec3 position, glm::vec3 color);
-	Sphere(float mass, Sphere_mesh* mesh, glm::vec3 position, float transparency);
-	Sphere(float mass, Sphere_mesh* mesh, glm::vec3 position, glm::vec3 color, float transparency);
+    Sphere(float mass, Sphere_mesh* mesh, glm::vec3 position,
+        glm::vec3 color = glm::vec3(0.0f, 0.0f, 1.0f), float transparency = 1.0f);
 
-	void SetVelocity(glm::vec3 velocity);
-	void SetAcceleration(glm::vec3 Acceleration);
-	void SetForce(glm::vec3 Force);
-
-	void SetMesh(Sphere_mesh* mesh);
-	void SetTransparency(float transparency);
-	void SetColor(glm::vec3 color);
-	void ToogleFixed();
-
-	void Update(float deltaTime);
-	void ProcessCuboidCollision(const std::vector<Cuboid>& cuboids);
-	void ProcessSphereCollision(std::vector<Sphere>& spheres);
-
-	void Render(const Shader& shader);
-	glm::mat4 getModelMatrix() const;
-
-private:
-	glm::vec3 ComputeMomentum();
+    void Render(const Shader& shader) const;
 };

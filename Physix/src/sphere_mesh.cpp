@@ -1,3 +1,6 @@
+// See sphere_mesh.h for what this class is (pure GPU sphere geometry via a
+// latitude/longitude UV-sphere triangulation); this file is the
+// implementation, including that triangulation in generateSphereMesh below.
 #include "sphere_mesh.h"
 #include <cmath>
 #include <iostream>

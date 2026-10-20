@@ -13,6 +13,55 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Source Files\physics">
+      <UniqueIdentifier>{a0a4e54a-d6d9-4b5b-b98a-2a36a2c70bd3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\physics">
+      <UniqueIdentifier>{24340600-7727-4207-ba29-8d36ec1bec97}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\render">
+      <UniqueIdentifier>{d5eb42c1-f2ad-42d0-b5bd-6c1bd52bbd9f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\render">
+      <UniqueIdentifier>{11a0ab97-19a3-4095-8594-55bc379616c1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\physics\collision">
+      <UniqueIdentifier>{ad92abb3-7bd8-42b6-9139-4b618ef4990a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\physics\collision">
+      <UniqueIdentifier>{ec371ee2-a7f0-4c9a-b29f-6ee384ee3cb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\scene">
+      <UniqueIdentifier>{d7a0e6de-bb35-4e56-9cfc-eeecc3da5d94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\scene">
+      <UniqueIdentifier>{18ee60c6-7592-41c2-a015-14eaf86e82b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{9a03ff20-570e-41ef-8c2c-de6ccbfb0e2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\core">
+      <UniqueIdentifier>{a7a5b884-d576-402d-bb57-6d23bde344a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shader Files">
+      <UniqueIdentifier>{a77263ba-6553-46d0-82aa-20eca85f348e}</UniqueIdentifier>
+      <Extensions>vert;frag;glsl</Extensions>
+    </Filter>
+    <Filter Include="Source Files\interaction">
+      <UniqueIdentifier>{834b8679-1ca2-4f30-89e4-f97d2d399fd4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\interaction">
+      <UniqueIdentifier>{5927ffe4-681c-4748-a851-e3831045d570}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\imgui">
+      <UniqueIdentifier>{52e1e735-f151-4e21-b66f-c30a8a4c3493}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\imgui">
+      <UniqueIdentifier>{4ee212eb-9dc6-429b-9620-8dd38e349d43}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\capture">
+      <UniqueIdentifier>{6d1a6e1a-6b1a-4c2b-9e0a-9d5c2a9b6f11}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\glad.cpp">
@@ -39,6 +88,57 @@
     <ClCompile Include="src\camera.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\physics\PhysicsWorld.cpp">
+      <Filter>Source Files\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\physics\RigidBody.cpp">
+      <Filter>Source Files\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\render\RenderComponent.cpp">
+      <Filter>Source Files\render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\physics\collision\BroadPhase.cpp">
+      <Filter>Source Files\physics\collision</Filter>
+    </ClCompile>
+    <ClCompile Include="src\physics\JobSystem.cpp">
+      <Filter>Source Files\physics</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\Scene.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene\SphereSpawner.cpp">
+      <Filter>Source Files\scene</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Window.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\interaction\Picker.cpp">
+      <Filter>Source Files\interaction</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\DebugUI.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="src\core\Capture.cpp">
+      <Filter>Source Files\core</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)Dependencies\imgui\imgui.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)Dependencies\imgui\imgui_draw.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)Dependencies\imgui\imgui_tables.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)Dependencies\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)Dependencies\imgui\backends\imgui_impl_glfw.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="$(SolutionDir)Dependencies\imgui\backends\imgui_impl_opengl3.cpp">
+      <Filter>Source Files\imgui</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\sphere_mesh.h">
@@ -59,5 +159,79 @@
     <ClInclude Include="src\camera.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="src\physics\PhysicsWorld.h">
+      <Filter>Header Files\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\physics\RigidBody.h">
+      <Filter>Header Files\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\render\RenderComponent.h">
+      <Filter>Header Files\render</Filter>
+    </ClInclude>
+    <ClInclude Include="src\physics\collision\BroadPhase.h">
+      <Filter>Header Files\physics\collision</Filter>
+    </ClInclude>
+    <ClInclude Include="src\physics\JobSystem.h">
+      <Filter>Header Files\physics</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\Scene.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\scene\SphereSpawner.h">
+      <Filter>Header Files\scene</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Window.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Input.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interaction\Picker.h">
+      <Filter>Header Files\interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interaction\Selection.h">
+      <Filter>Header Files\interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\DebugUI.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\interaction\VelocityTool.h">
+      <Filter>Header Files\interaction</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\FrameStats.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="src\core\Capture.h">
+      <Filter>Header Files\core</Filter>
+    </ClInclude>
+    <ClInclude Include="$(SolutionDir)Dependencies\stb\stb_image_write.h">
+      <Filter>Header Files\capture</Filter>
+    </ClInclude>
+    <ClInclude Include="$(SolutionDir)Dependencies\gif\gif.h">
+      <Filter>Header Files\capture</Filter>
+    </ClInclude>
+    <ClInclude Include="$(SolutionDir)Dependencies\imgui\imgui.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="$(SolutionDir)Dependencies\imgui\imgui_internal.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="$(SolutionDir)Dependencies\imgui\imconfig.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="$(SolutionDir)Dependencies\imgui\backends\imgui_impl_glfw.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+    <ClInclude Include="$(SolutionDir)Dependencies\imgui\backends\imgui_impl_opengl3.h">
+      <Filter>Header Files\imgui</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\shaders\basic.vert">
+      <Filter>Shader Files</Filter>
+    </None>
+    <None Include="src\shaders\basic.frag">
+      <Filter>Shader Files</Filter>
+    </None>
   </ItemGroup>
 </Project>
